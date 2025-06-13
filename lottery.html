@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lottery Game</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      margin-top: 50px;
+    }
+    .number-box {
+      display: inline-block;
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 24px;
+      background-color: #f0f0f0;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+
+    // Child component to display numbers
+    function NumberBox({ number }) {
+      return <div className="number-box">{number}</div>;
+    }
+
+    function App() {
+      const [lotteryNumbers, setLotteryNumbers] = React.useState([]);
+      const [isWinner, setIsWinner] = React.useState(false);
+
+      function generateLotteryNumbers() {
+        const newNumbers = Array.from({ length: 3 }, () =>
+          Math.floor(Math.random() * 10)
+        );
+        setLotteryNumbers(newNumbers);
+        const sum = newNumbers.reduce((a, b) => a + b, 0);
+        setIsWinner(sum === 15);
+      }
+
+      function resetGame() {
+        setLotteryNumbers([]);
+        setIsWinner(false);
+      }
+
+      return (
+        <div>
+          <h1>🎉 Lottery Game 🎉</h1>
+          <button onClick={generateLotteryNumbers}>Generate Numbers</button>
+
+          <div style={{ margin: "20px" }}>
+            {lotteryNumbers.map((num, index) => (
+              <NumberBox key={index} number={num} />
+            ))}
+          </div>
+
+          {lotteryNumbers.length > 0 && (
+            <div>
+              <h2>
+                {isWinner ? "🎊 You won the lottery! 🎊" : "❌ Try again!"}
+              </h2>
+              <button onClick={resetGame}>Reset</button>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+  </script>
+</body>
+</html>
